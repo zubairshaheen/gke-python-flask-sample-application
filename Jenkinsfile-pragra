@@ -15,14 +15,14 @@ pipeline {
         stage('Checkout') {
             steps {
                 echo 'Checking images..'
-                sh 'docker image ls'
+//                sh 'docker image ls -a'
             }
         }
  
-         stage('Build') {
+         stage('Docker Build') {
             steps {
                 echo 'Building custom tagged Image..'
-                sh 'docker image build -t bobbybabu007/python-flask-docker-sample:{BUILD_NUMBER} '
+ //               sh 'docker image build -t bobbybabu007/python-flask-docker-sample:latest '
             }
         }
         
@@ -31,30 +31,30 @@ pipeline {
                 stage('Build Custom tagged Image') {
                     steps {
                         echo 'Building custom tagged Image..'
-                        sh 'docker image build -t bobbybabu007/python-flask-docker-sample:{BUILD_NUMBER} '
+//                        sh 'docker image build -t bobbybabu007/python-flask-docker-sample:latest '
                     }
                 }
                 stage('Build latest tagged Image') {
-                    when { expression { return isNightly() } }
                     steps {
                         echo 'Building latest tagged Image..'
-                        sh 'docker image build -t bobbybabu007/python-flask-docker-sample:latest '
+//                        sh 'docker image build -t bobbybabu007/python-flask-docker-sample:latest '
                     }
                 }
             }      
 */
-        stage('Test') {
+        stage('Docker Run Test') {
             steps {
-                echo 'Testing..'
-                sh 'npm test'
+                echo 'Testing Container functionality..'
+//                sh 'docker container run -idt -P --name test bobbybabu007/python-flask-docker-sample:latest '
             }
         }
         
-        stage('Package') {
+        stage('Docker Tag & Push') {
             steps {
-                echo 'Packaging....'
-                sh 'npm run package'
-                archiveArtifacts artifacts: '**/distribution/*.zip', fingerprint: true
+                echo 'Pushing to DockerHub....'
+//                sh 'docker login -u ${USERNAME} -p {PASSWORD}'
+//                sh 'docker image push bobbybabu007/python-flask-docker-sample:latest'
+//                archiveArtifacts artifacts: '**/distribution/*.zip', fingerprint: true
             }
         }
     }
