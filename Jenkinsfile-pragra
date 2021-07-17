@@ -15,8 +15,15 @@ pipeline {
                 sh 'docker image ls'
             }
         }
-          
-         stage('Docker Build') {
+ 
+         stage('Build') {
+            steps {
+                echo 'Building custom tagged Image..'
+                sh 'docker image build -t bobbybabu007/python-flask-docker-sample:{BUILD_NUMBER} '
+            }
+        }
+        
+ /*        stage('Docker Build') {
             parallel {
                 stage('Build Custom tagged Image') {
                     steps {
@@ -32,7 +39,7 @@ pipeline {
                     }
                 }
             }      
-
+*/
         stage('Test') {
             steps {
                 echo 'Testing..'
