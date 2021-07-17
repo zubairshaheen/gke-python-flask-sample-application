@@ -1,6 +1,6 @@
 pipeline {
-//    agent any
-    agent { label 'jenkins-jenkins-agent' }
+    agent any
+//    agent { label 'jenkins-jenkins-agent' }
 
     triggers
     {
@@ -48,4 +48,5 @@ pipeline {
             }
         }
     }
+}
 }
