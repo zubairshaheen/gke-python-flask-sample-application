@@ -4,16 +4,34 @@ pipeline {
 
     triggers
     {
-        pollSCM('* * * *  *')
+        pollSCM('* * * * *')
     }
 
     stages {
-        stage('Build') {
+    
+        stage('Checkout') {
             steps {
-                echo 'Building..'
-                sh 'npm install && npm i --save mysql2 && npm i --save express && npm i swagger-jsdoc@6.0.1 && npm i swagger-ui-express@4.1.6'
+                echo 'Checking images..'
+                sh 'docker image ls'
             }
-            }
+        }
+          
+         stage('Docker Build') {
+            parallel {
+                stage('Build Custom tagged Image') {
+                    steps {
+                        echo 'Building custom tagged Image..'
+                        sh 'docker image build -t bobbybabu007/python-flask-docker-sample:{BUILD_NUMBER} '
+                    }
+                }
+                stage('Build latest tagged Image') {
+                    when { expression { return isNightly() } }
+                    steps {
+                        echo 'Building latest tagged Image..'
+                        sh 'docker image build -t bobbybabu007/python-flask-docker-sample:latest '
+                    }
+                }
+            }      
 
         stage('Test') {
             steps {
@@ -21,6 +39,7 @@ pipeline {
                 sh 'npm test'
             }
         }
+        
         stage('Package') {
             steps {
                 echo 'Packaging....'
@@ -29,3 +48,4 @@ pipeline {
             }
         }
     }
+}
